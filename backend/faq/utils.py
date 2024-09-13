@@ -1,6 +1,7 @@
 # load package
 import pandas as pd
 from datasets import Dataset
+import os
 
 def semantic_dataset(file_to_encode):
     '''

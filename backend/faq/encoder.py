@@ -7,7 +7,9 @@ class Encoder:
         """
         Init a new embedding encoder
         """
+        # create tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
+        # load the pretrained model from huggingface
         self.model = AutoModel.from_pretrained(model_ckpt)
 
     def get_embeddings(self,text_list):
@@ -30,7 +32,7 @@ class Encoder:
 
         return embeddings_dataset
 
-    def get_nearest(self,keywords,embeddings_dataset):
+    def get_nearest(self,keywords:str,embeddings_dataset):
         '''
         Get the nearest results
         '''
@@ -39,12 +41,35 @@ class Encoder:
         # get nearest result from the embeddings dataset
         scores, results = embeddings_dataset.get_nearest_examples("embeddings", keywords_embedding, k=5)
 
-        # delete unused results
-        del results['id']
-        del results['embeddings']
-        del results['lang']
-        del results['__index_level_0__']
+        # clean the dataset
+        results = self.clean_dataset(results)
         # add scores
         results['scores'] = scores.tolist()
         # return results
         return results
+
+
+    def filter(self,category:str,embeddings_dataset):
+        '''
+        Filter category results
+        '''
+        # convert to pandas
+        pandaset = pd.DataFrame(embeddings_dataset)
+        # filter results and convert it back to dataset
+        pandaset = pandaset[pandaset['topics'].str.contains(category)]
+        # clean the dataset
+        cleaned_results = self.clean_dataset(pandaset.to_dict())
+        final_results={}
+        for k,r in cleaned_results.items():
+            final_results[k]=list(r.values())
+        # return results
+        return final_results
+
+    def clean_dataset(self,dataset:Dataset):
+        # delete unused fields
+        del dataset['id']
+        del dataset['embeddings']
+        del dataset['lang']
+        del dataset['__index_level_0__']
+        del dataset['text']
+        return dataset
