@@ -1,0 +1,9 @@
+setup.py
+dev_go_faq.egg-info/PKG-INFO
+dev_go_faq.egg-info/SOURCES.txt
+dev_go_faq.egg-info/dependency_links.txt
+dev_go_faq.egg-info/top_level.txt
+faq/__init__.py
+faq/data.py
+faq/encoder.py
+faq/utils.py

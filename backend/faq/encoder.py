@@ -1,75 +1,52 @@
-from datasets import Dataset
-from transformers import AutoTokenizer, AutoModel
+# import packages
+import os
 import pandas as pd
+from sentence_transformers import SentenceTransformer
+import torch
 
 class Encoder:
-    def __init__(self,model_ckpt:str):
-        """
-        Init a new embedding encoder
-        """
-        # create tokenizer
-        self.tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
-        # load the pretrained model from huggingface
-        self.model = AutoModel.from_pretrained(model_ckpt)
+    def __init__(self) -> None:
+        '''
+        Get the model to encode data
+        '''
+        # Get the encoder sentence transformer model
+        self.model = SentenceTransformer(os.environ.get("TRANSFORMER"))
 
     def get_embeddings(self,text_list):
         '''
         Get the embedding encoding of on specific text value
         '''
-        encoded_input = self.tokenizer(text_list, padding=True, truncation=True, return_tensors="pt")
-        encoded_input = {k: v for k, v in encoded_input.items()}
-        model_output = self.model(**encoded_input)
-        return model_output.last_hidden_state[:, 0]
+        # Add index to embeddings
+        embeddings = self.model.encode(text_list)
+        # return embeddings to save
+        return embeddings
 
-    def encode_dataset(self,text_dataset:Dataset):
+    def search(self,keywords:str,corpus_embeddings,corpus,nbresults):
         '''
-        Encode a whole dataset with FAISS index
+        Get indexes of the nearest results
         '''
-        embeddings_dataset =  text_dataset.map(
-            lambda x: {"embeddings": self.get_embeddings(x["text"]).detach().numpy()[0]}
-        )
-        embeddings_dataset.add_faiss_index(column="embeddings")
-
-        return embeddings_dataset
-
-    def get_nearest(self,keywords:str,embeddings_dataset):
-        '''
-        Get the nearest results
-        '''
-        # encode keywords
-        keywords_embedding = self.get_embeddings(keywords).detach().numpy()
-        # get nearest result from the embeddings dataset
-        scores, results = embeddings_dataset.get_nearest_examples("embeddings", keywords_embedding, k=5)
-
-        # clean the dataset
-        results = self.clean_dataset(results)
-        # add scores
-        results['scores'] = scores.tolist()
-        # return results
+        top_k = min(5, len(corpus))
+        # get the keywords embedding
+        keyword_embedding = self.get_embeddings(keywords)
+        # We use cosine-similarity and torch.topk to find the highest 5 scores
+        similarity_scores = self.model.similarity(keyword_embedding, corpus_embeddings)[0]
+        scores, indices = torch.topk(similarity_scores, k=top_k)
+        # filter and format results
+        results = self.filter_format(None,corpus.iloc[indices])
+        # return results uids
         return results
 
-
-    def filter(self,category:str,embeddings_dataset):
+    # filter by category and format results to be displayed
+    def filter_format(self,category:str,data):
         '''
         Filter category results
         '''
-        # convert to pandas
-        pandaset = pd.DataFrame(embeddings_dataset)
         # filter results and convert it back to dataset
-        pandaset = pandaset[pandaset['topics'].str.contains(category)]
-        # clean the dataset
-        cleaned_results = self.clean_dataset(pandaset.to_dict())
+        filtered_results = data[data['topics'].str.contains(category)] if category else data
+        # drop unecessary column
+        filtered_results = filtered_results.drop(columns={"id","lang","text"})
+        # format results to be in list format
         final_results={}
-        for k,r in cleaned_results.items():
-            final_results[k]=list(r.values())
+        for k,r in filtered_results.items(): final_results[k]=r.to_list()
         # return results
         return final_results
-
-    def clean_dataset(self,dataset:Dataset):
-        # delete unused fields
-        del dataset['id']
-        del dataset['embeddings']
-        del dataset['lang']
-        del dataset['__index_level_0__']
-        del dataset['text']
-        return dataset

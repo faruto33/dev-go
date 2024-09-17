@@ -1,7 +1,5 @@
 # load package
 import pandas as pd
-from datasets import Dataset
-import os
 
 def semantic_dataset(file_to_encode):
     '''
@@ -13,7 +11,5 @@ def semantic_dataset(file_to_encode):
     data = data[data['lang']=='fr']
     # Combine a new text field for semantic search
     data['text'] = data['label'] + ' ' + data['body'] + ' ' + data['topics']
-    # Create a Dateset from panda dataframe
-    text_dataset = Dataset.from_pandas(data)
     # Return the dataset
-    return text_dataset
+    return data
