@@ -5,9 +5,19 @@ import os
 from faq.encoder import Encoder
 from faq.data import save_pickle,load_pickle,extract_categories
 from faq.utils import semantic_dataset
+from fastapi.middleware.cors import CORSMiddleware
 
 # init the API
 app = FastAPI()
+
+# Allowing all middleware is optional, but good practice for dev purposes
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # load the embeddings from pickle data
 app.state.embeddings = load_pickle("EMBEDDING_PICKLE") if os.path.isfile(os.environ.get("EMBEDDING_PICKLE")) else None
