@@ -3,9 +3,9 @@
 
 Bienvenu sur le projet FAQ paris 2024 livré pour la société dev&Go.
 
-Il a été divisé en 2 projets distinct:
+Il a été divisé en 2 projets distincts:
 
-- La création d'une **API BACKEND** pour livrer les questions/réponses et catégorie à partir du dataset extrait sur kaggle :
+- La création d'une **API BACKEND** pour livrer les questions/réponses et les catégories à partir du dataset extrait sur kaggle :
 https://www.kaggle.com/datasets/sahityasetu/paris-2024-olympics-faq
 
 - La création d'une interface **FRONTEND** pour intéragir avec un utilisateur qui souhaite rechercher une question/réponse.
