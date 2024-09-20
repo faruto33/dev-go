@@ -1,22 +1,44 @@
 <script setup>
+import Loader from './Loader.vue'
 import axios from 'axios'
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect,inject } from 'vue'
+import getApi from '../assets/api'
 
-const props = defineProps({query: String})
+// define the query and category string get from parent component
+const props = defineProps({query: String,category: String})
+// get the provided api config
+const apiconfig = ref(inject('config'))
 
+// define reactive variable to display results
 let labels = ref('')
-let topics = ref('')
+let bodys = ref('')
+let api = ref('')
+// define reactive variable to display loader
+const loading = ref(false)
+// define reactive variable to set body visible
+let isVisible = ref([])
 
 function search() {
-      axios
-      //.get('https://dev-go-faq-902037774966.europe-west1.run.app/search?category='+ q +'&limit=5')
-      .get('http://127.0.0.1:8000/search?keywords=' + props.query + '&limit=5')
-      .then(function (response) {
-        labels.value = response.data.label;
-        topics.value = response.data.topics[0].replace(';',' / ').replace(';',' / ');
-      });
+    //display the loader
+    loading.value = true
+    // get api url
+    axios
+    .get(getApi('search',props.query,props.category,apiconfig.value))
+    .then(function (response) {
+      // update results
+      labels.value = response.data.label;
+       // update results
+      bodys.value = response.data.body;
+      // remove the loader after loading
+      loading.value= false
+    });
     }
 
+// update element visibility
+function toggleVisibility(key){
+  isVisible.value[key]= !(isVisible.value[key])
+}
+// if props change we start a new start
 watchEffect(() => {
   search()
 })
@@ -25,14 +47,15 @@ watchEffect(() => {
 
 <template>
   <results>
-    <div class="mayday_layout-loading_content">
+    <Loader v-if="loading"></Loader>
+    <div v-else class="mayday_layout-loading_content">
       <div class="mayday_folder-container">
         <h1 class="mayday_folder-title">
         </h1>
         <section class="mayday_folder-entities_container">
           <ul class="mayday_folder-entities_list">
-            <li v-for="label in labels" class="mayday_folder-entities_item">
-              <div class="mayday_entity-link">
+            <li v-for="label,key in labels" class="mayday_folder-entities_item">
+              <div class="mayday_entity-link" @click="toggleVisibility(key)">
                 <div class="mayday_entity-wrapper">
                   <div class="mayday_entity-title">
                     <div class="mayday_entity-icon">
@@ -46,6 +69,7 @@ watchEffect(() => {
                   </div>
                 </div>
               </div>
+              <div v-if=isVisible[key] class="mayday_entity-body">{{ bodys[key] }}</div>
             </li>
           </ul>
         </section>
@@ -161,6 +185,7 @@ watchEffect(() => {
     padding: 0 30px 0 0;
     position: relative;
     background: white;
+    cursor: pointer;
 }
 
 .mayday_entity-link {
@@ -181,5 +206,19 @@ ol, ul, menu {
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+.mayday_entity-body {
+    border-radius: 4px;
+    border-width: 10px;
+    border-color: transparent;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+    transition-timing-function: linear;
+    background-color: #edc2de2b;
+    margin-top: 5px;
+    padding: 20px;
 }
 </style>

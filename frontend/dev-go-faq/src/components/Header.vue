@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
+const search=ref('')
 </script>
 
 <template>
@@ -391,18 +392,6 @@ mayday_header-container .mayday_header-main {
 a {
     color: inherit;
     text-decoration: inherit;
-}
-
-html {
-    line-height: 1.5;
-    -webkit-text-size-adjust: 100%;
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    font-feature-settings: normal;
-    font-variation-settings: normal;
-    background: #f4f4f4;
 }
 
 </style>

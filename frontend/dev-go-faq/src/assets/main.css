@@ -14,9 +14,8 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+.tree-container{
+  border-right-color: #4A7CBC;
+    border-right-width: 30px;
+    border-right-style: ridge;
 }

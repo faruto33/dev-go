@@ -15,6 +15,7 @@ def save_pickle(data,env_var_path:str):
     '''
     torch.save(data,os.environ.get(env_var_path))
 
+
 def extract_categories(env_var_path):
     '''
     Extract categories from CSV file

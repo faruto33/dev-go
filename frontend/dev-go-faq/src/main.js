@@ -1,12 +1,17 @@
 import './assets/main.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import './assets/bootstrap.min.css'
 import 'bootstrap'
 
 import { createApp } from 'vue'
 import App from './App.vue'
-import store from './store'
+import { config } from './assets/config'
 
 // create a new app
 const app = createApp(App);
-app.use(store);
+
+// define global config properties
+app.config.globalProperties.msg = 'hello'
+app.provide('config', config)
+
+// mount the application
 app.mount('#app');

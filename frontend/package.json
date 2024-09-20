@@ -5,6 +5,10 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "primevue": "^4.0.7",
+    "sl-vue-tree": "^1.8.5",
+    "vue-content-loader": "^2.0.1",
+    "vue3-treeview": "^0.4.2",
+    "vuejs-tree": "^3.0.2",
     "vuex": "^4.0.2"
   }
 }
