@@ -55,7 +55,7 @@ function returnhome(event){
         <Home v-on:category="searchcategory($event)"/>
       </main>
     </div>
-    <div v-show="!home" class="col-xs-3 col-sm-3 mx-auto tree-container">
+    <div v-show="!home" class="col-xs-3 col-sm-3 tree-container">
       <main>
         <Tree v-on:category="searchcategory($event)"/>
       </main>

@@ -14,8 +14,14 @@ a,
   }
 }
 
-.tree-container{
-  border-right-color: #4A7CBC;
-    border-right-width: 30px;
-    border-right-style: ridge;
-}
+@media (min-width: 768px) {
+  .tree-container{
+    border-right-color: #4A7CBC;
+      border-right-width: 30px;
+      border-right-style: ridge;
+  }
+ }
+
+ .tree-container{
+  margin-left:20px;
+ }

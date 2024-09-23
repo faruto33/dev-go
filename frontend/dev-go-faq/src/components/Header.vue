@@ -209,9 +209,19 @@ img, svg, video, canvas, audio, iframe, embed, object {
     z-index: 50;
 }
 
+@media (min-width: 1000px) {
+    .mayday_header-container {
+        height: 240px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .mayday_header-container {
+        height: 300px;
+    }
+}
 .mayday_header-container {
     width: 100%;
-    height: 240px;
     box-shadow: 0 5px 14px rgba(0, 0, 0, .15);
 }
 

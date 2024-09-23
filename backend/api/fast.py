@@ -54,6 +54,7 @@ def search(
         category: str = None,
         limit: int = 5
     ):
+    print(limit)
     # define a new encoder
     encoder = Encoder()
     # init empty results list

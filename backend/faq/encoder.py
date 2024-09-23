@@ -25,7 +25,7 @@ class Encoder:
         '''
         Get indexes of the nearest results
         '''
-        top_k = min(5, len(corpus))
+        top_k = min(nbresults, len(corpus))
         # get the keywords embedding
         keyword_embedding = self.get_embeddings(keywords)
         # We use cosine-similarity and torch.topk to find the highest 5 scores

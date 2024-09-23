@@ -66,6 +66,12 @@ axios.get(api).then(function (response) {
     margin-top: 50px;
 }
 
+@media (max-width: 768px) {
+.mayday_home_collection-container_alt {
+    margin-top: 20px;
+  }
+}
+
 @media (min-width: 768px) {
     .mayday_home_collection-container_col:not(:last-child) {
         border-right-width: 1px;
@@ -80,6 +86,13 @@ axios.get(api).then(function (response) {
 @media (min-width: 1000px) {
     .mayday_home_collection-container_col {
         width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .mayday_home_collection-container_col {
+        width: 90%;
+        margin:auto;
     }
 }
 

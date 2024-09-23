@@ -1,7 +1,6 @@
 # load package
 import pandas as pd
 
-
 def semantic_dataset(file_to_encode):
     '''
     Load from the compressed model
